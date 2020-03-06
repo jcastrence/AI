@@ -75,31 +75,23 @@ def tinyMazeSearch(problem):
 def depthFirstSearch(problem):
     """
     Search the deepest nodes in the search tree first.
-
     Your search algorithm needs to return a list of actions that reaches the
     goal. Make sure to implement a graph search algorithm.
-
     To get started, you might want to try some of these simple commands to
     understand the search problem that is being passed in:
-
     print("Start:", problem.getStartState())
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
+    #
+    # print("Start:", problem.getStartState())
+    # print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
+    # print("Start's successors:", problem.getSuccessors(problem.getStartState()))
 
-    # Dictionary for storing the directions
-    # from game import Directions
-    # dirs = {
-    #     "North": Directions.NORTH,
-    #     "East": Directions.EAST,
-    #     "South": Directions.SOUTH,
-    #     "West": Directions.WEST
-    # }
-
-    # A node is a triple (state, action, cost) 
+    # A node is a triple (state, action, cost)
     def checkPath(node):
-        if problem.isGoalState(node):                    # Check if goal state was reached
-            return [dirs[node]]                          # Return the direction to the node to the path
+        if problem.isGoalState(node[0]):                    # Check if goal state was reached
+            return [node[1]]                                # Return the direction to the node to the path
         successors = util.Stack()                           # Not a goal state so we need to check successors
         for n in problem.getSuccessors(node[0]):            # Get all successors of current node
             if n[0] not in seen:
@@ -111,11 +103,12 @@ def depthFirstSearch(problem):
                 if (node[1] == 'Start'):
                     return path                             # Path completed
                 else:
-                    return [dirs[node[1]], *path]           # Add the direction to the node to the path
+                    return [node[1], *path]                 # Add the direction to the node to the path
         return []                                           # No goal state found from this node
-    dirs = []
+
     seen = [problem.getStartState()]                        # Create a list to store seen nodes (cycle detection)
-    return checkPath(problem.getStartState()) # Start the algorithm with the start state
+    return checkPath((problem.getStartState(), 'Start', 0)) # Start the algorithm with the start state
+
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
