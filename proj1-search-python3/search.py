@@ -88,18 +88,18 @@ def depthFirstSearch(problem):
     """
 
     # Dictionary for storing the directions
-    from game import Directions
-    dirs = {
-        "North": Directions.NORTH,
-        "East": Directions.EAST,
-        "South": Directions.SOUTH,
-        "West": Directions.WEST
-    }
+    # from game import Directions
+    # dirs = {
+    #     "North": Directions.NORTH,
+    #     "East": Directions.EAST,
+    #     "South": Directions.SOUTH,
+    #     "West": Directions.WEST
+    # }
 
-    # A node is a triple (state, action, cost)
+    # A node is a triple (state, action, cost) 
     def checkPath(node):
-        if problem.isGoalState(node[0]):                    # Check if goal state was reached
-            return [dirs[node[1]]]                          # Return the direction to the node to the path
+        if problem.isGoalState(node):                    # Check if goal state was reached
+            return [dirs[node]]                          # Return the direction to the node to the path
         successors = util.Stack()                           # Not a goal state so we need to check successors
         for n in problem.getSuccessors(node[0]):            # Get all successors of current node
             if n[0] not in seen:
@@ -113,10 +113,9 @@ def depthFirstSearch(problem):
                 else:
                     return [dirs[node[1]], *path]           # Add the direction to the node to the path
         return []                                           # No goal state found from this node
-
+    dirs = []
     seen = [problem.getStartState()]                        # Create a list to store seen nodes (cycle detection)
-    return checkPath((problem.getStartState(), 'Start', 0)) # Start the algorithm with the start state
-    														#test
+    return checkPath(problem.getStartState()) # Start the algorithm with the start state
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
