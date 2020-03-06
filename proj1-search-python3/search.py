@@ -116,6 +116,7 @@ def depthFirstSearch(problem):
 
     seen = [problem.getStartState()]                        # Create a list to store seen nodes (cycle detection)
     return checkPath((problem.getStartState(), 'Start', 0)) # Start the algorithm with the start state
+    														#test
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
