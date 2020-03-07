@@ -91,8 +91,8 @@ def depthFirstSearch(problem):
         if problem.isGoalState(node[0]):                    # Check if goal state was reached
             return [node[1]]                                # Return the direction to the node to the path
         successors = util.Stack()                           # Not a goal state so we need to check successors
-        for n in problem.getSuccessors(node[0]):            # Get all successors of current node
-            successors.push(n)                              # Add successors to a stack
+        for successor in problem.getSuccessors(node[0]):    # Get all successors of current node
+            successors.push(successor)                      # Add successors to a stack
         while (not successors.isEmpty()):
             path = checkPath(successors.pop())              # Check if successor has path to goal state
             if (len(path) != 0):
@@ -108,26 +108,25 @@ def depthFirstSearch(problem):
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
-    # A node is a triple (state, action, cost)
-    def checkPath(node):
-        if node[0] in visited:                              # Check if this node has been visited before
-            return []
-        visited.append(node[0])                             # Node has now been seen
-        if problem.isGoalState(node[0]):                    # Check if goal state was reached
-            return [node[1]]                                # Return the direction to the node to the path
-        successors = util.Queue()                           # Not a goal state so we need to check successors
-        for n in problem.getSuccessors(node[0]):            # Get all successors of current node
-            successors.push(n)                              # Add successors to a stack
-        while (not successors.isEmpty()):
-            path = checkPath(successors.pop())              # Check if successor has path to goal state
-            if (len(path) != 0):
-                if (node[1] == 'Start'): 
-                    return path                             # Path completed
-                else:
-                    return [node[1], *path]                 # Add the direction to the node to the path
-        return []                                           # No goal state found from this node
     visited = []                                            # Create a list to store visited nodes (cycle detection)
-    return checkPath((problem.getStartState(), 'Start', 0)) # Start the algorithm with the start state
+    frontier = util.Queue()                                 # Create a Queue to maintain node visiting order
+    frontier.push((problem.getStartState(), 'Start', 0))    # Push the starting state onto the queue
+    predecessors = {}                                       # Create dictionary to keep track of parent nodes
+    while (not frontier.isEmpty()):
+        node = frontier.pop()                               # Visit the top node on the queue
+        if problem.isGoalState(node[0]):                    # Check if goal state has been reached
+            path = []                                       # Goal state has been reached and a path needs to be created
+            currNode = node
+            while (currNode[1] != 'Start'):
+                path = [currNode[1], *path]                 # Add direction to get to node to path
+                currNode = predecessors[currNode]           # Set the current node to its parent node
+            return path                                     # Path has been fully constructed
+        if node[0] not in visited:
+            visited.append(node[0])                         # Node has now been visited
+            for successor in problem.getSuccessors(node[0]):
+                frontier.push(successor)                    # Add all successors to the queue
+                predecessors[successor] = node              # Define the predecessor to all successors as the popped node
+    return []                                               # No goal state was found
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
