@@ -187,11 +187,11 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                 currCost = cost[node] + successor[2]
                 costAll = currCost + heuristic(successor[0], problem)
                 if successor[0] not in visited:
-                    frontier.update(successor, currCost)    # Add all successors to the queue
+                    frontier.update(successor, costAll)    # Add all successors to the queue
                 if (successor not in cost)\
-                        or (currCost < cost[successor]):
+                        or (costAll < cost[successor]):
                     predecessors[successor] = node          # Define the predecessor to all successors as the popped node
-                    cost[successor] = currCost
+                    cost[successor] = costAll
     return []                                               #No goal state found
 
 
