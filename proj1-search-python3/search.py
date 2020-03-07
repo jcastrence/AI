@@ -130,8 +130,32 @@ def breadthFirstSearch(problem):
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    visited = []                                            # Create a list to store visited nodes (cycle detection)
+    frontier = util.PriorityQueue()                         # Create a Priority Queue to maintain node visiting order
+    startNode = (problem.getStartState(), 'Start', 0)
+    frontier.push(startNode, 0)                             # Push the starting state onto the priority queue
+    predecessors = {}                                       # Create dictionary to keep track of parent nodes
+    cost = {startNode : 0}                                  # Create dictionary to keep track of cheapest cost to get to a node
+    while (not frontier.isEmpty()):
+        node = frontier.pop()                               # Visit the top node on the priority queue (cheapest cost node)
+        if problem.isGoalState(node[0]):                    # Check if goal state has been reached
+            path = []                                       # Goal state has been reached and a path needs to be created
+            currNode = node
+            while (currNode[1] != 'Start'):
+                path = [currNode[1], *path]                 # Add direction to get to node to path
+                currNode = predecessors[currNode]           # Set the current node to its parent node
+            return path                                     # Path has been fully constructed
+        if node[0] not in visited:
+            visited.append(node[0])                         # Node has now been visited
+            for successor in problem.getSuccessors(node[0]):
+                currCost = cost[node] + successor[2]
+                if successor[0] not in visited:
+                    frontier.update(successor, currCost)    # Add all successors to the queue
+                if (successor not in cost)\
+                        or (currCost < cost[successor]):
+                    predecessors[successor] = node          # Define the predecessor to all successors as the popped node
+                    cost[successor] = currCost
+    return []                                               # No goal state was found
 
 def nullHeuristic(state, problem=None):
     """
