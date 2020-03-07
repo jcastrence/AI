@@ -154,8 +154,8 @@ def aStarSearch(problem, heuristic=nullHeuristic):
         if node[0] not in visited:
             visited.append(node[0])
             for successor in problem.getSuccessors(node[0]):
-                    cost = (node[2] + successor[2]) + heuristic((successor[0], problem))      #Calculate the total cost plus heuristic cost per path
-                    frontier.push(successor[0], successor[1], cost)
+                    cost = (node[1] + successor[1]) #+ heuristic((successor[0], problem))      #Calculate the total cost plus heuristic cost per path
+                    frontier.push(successor, cost)
     return []                                              #No goal state found
 
 
