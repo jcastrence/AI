@@ -87,16 +87,17 @@ def depthFirstSearch(problem):
     # print("Start:", problem.getStartState())
     # print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     # print("Start's successors:", problem.getSuccessors(problem.getStartState()))
-
+    
     # A node is a triple (state, action, cost)
     def checkPath(node):
+        if node[0] in visited:                              # Check if this node has been visited before
+            return []
+        visited.append(node[0])                             # Node has now been seen
         if problem.isGoalState(node[0]):                    # Check if goal state was reached
             return [node[1]]                                # Return the direction to the node to the path
         successors = util.Stack()                           # Not a goal state so we need to check successors
         for n in problem.getSuccessors(node[0]):            # Get all successors of current node
-            if n[0] not in seen:
-                seen.append(n[0])                           # Node has now been seen
-                successors.push(n)                          # Add successors to a stack
+            successors.push(n)                              # Add successors to a stack
         while (not successors.isEmpty()):
             path = checkPath(successors.pop())              # Check if successor has path to goal state
             if (len(path) != 0):
@@ -105,9 +106,9 @@ def depthFirstSearch(problem):
                 else:
                     return [node[1], *path]                 # Add the direction to the node to the path
         return []                                           # No goal state found from this node
-
-    seen = [problem.getStartState()]                        # Create a list to store seen nodes (cycle detection)
+    visited = []                                            # Create a list to store visited nodes (cycle detection)
     return checkPath((problem.getStartState(), 'Start', 0)) # Start the algorithm with the start state
+
 
 
 def breadthFirstSearch(problem):
