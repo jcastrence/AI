@@ -96,7 +96,7 @@ def depthFirstSearch(problem):
         while (not successors.isEmpty()):
             path = checkPath(successors.pop())              # Check if successor has path to goal state
             if (len(path) != 0):
-                if (node[1] == 'Start'):
+                if (node[1] == 'Start'): 
                     return path                             # Path completed
                 else:
                     return [node[1], *path]                 # Add the direction to the node to the path
@@ -108,8 +108,26 @@ def depthFirstSearch(problem):
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # A node is a triple (state, action, cost)
+    def checkPath(node):
+        if node[0] in visited:                              # Check if this node has been visited before
+            return []
+        visited.append(node[0])                             # Node has now been seen
+        if problem.isGoalState(node[0]):                    # Check if goal state was reached
+            return [node[1]]                                # Return the direction to the node to the path
+        successors = util.Queue()                           # Not a goal state so we need to check successors
+        for n in problem.getSuccessors(node[0]):            # Get all successors of current node
+            successors.push(n)                              # Add successors to a stack
+        while (not successors.isEmpty()):
+            path = checkPath(successors.pop())              # Check if successor has path to goal state
+            if (len(path) != 0):
+                if (node[1] == 'Start'): 
+                    return path                             # Path completed
+                else:
+                    return [node[1], *path]                 # Add the direction to the node to the path
+        return []                                           # No goal state found from this node
+    visited = []                                            # Create a list to store visited nodes (cycle detection)
+    return checkPath((problem.getStartState(), 'Start', 0)) # Start the algorithm with the start state
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
