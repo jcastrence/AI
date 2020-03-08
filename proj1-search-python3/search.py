@@ -115,22 +115,19 @@ def breadthFirstSearch(problem):
     while (not frontier.isEmpty()):
         node = frontier.pop()                               # Visit the top node on the queue
         if problem.isGoalState(node[0]):                    # Check if goal state has been reached
-            print("Goal State reached")
             path = []                                       # Goal state has been reached and a path needs to be created
             currNode = node
             while (currNode[1] != 'Start'):
-                print(path)
                 path = [currNode[1], *path]                 # Add direction to get to node to path
                 currNode = predecessors[currNode]           # Set the current node to its parent node
             return path                                     # Path has been fully constructed
         if node[0] not in visited:
             visited.append(node[0])                         # Node has now been visited
             for successor in problem.getSuccessors(node[0]):
-                print(successor)
                 if successor not in predecessors:
                     frontier.push(successor)                # Add all successors to the queue
                     predecessors[successor] = node          # Define the predecessor to all successors as the popped node
-    return []                                               # No goal state was found
+    return []                                              # No goal state was found
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
@@ -170,33 +167,47 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    frontier = util.PriorityQueue()                        #Create a priority queue to track visited nodes
-    startNode = (problem.getStartState(), 'Start',0)
-    frontier.push(startNode, 0)                            #Adds start state with cost 0
-    visited = []                                           #Keep track of visited nodes
-    predecessors = {}
-    cost = {startNode : 0}
+    # visited = []  # Create a list to store visited nodes (cycle detection)
+    # frontier = util.PriorityQueue()  # Create a Priority Queue to maintain node visiting order
+    # startNode = (problem.getStartState(), 'Start', 0)
+    # frontier.push(startNode, 0)  # Push the starting state onto the priority queue
+    # predecessors = {}                                       # Create dictionary to keep track of parent nodes
+    #
+    # while (not frontier.isEmpty()):
+    #     node = frontier.pop()  # Visit the top node on the priority queue (cheapest cost node)
+    #     if node[0] in visited:
+    #         continue
+    #     visited.append(node[0])
+    #     if problem.isGoalState(node[0]):                    # Check if goal state has been reached
+    #         path = []                                       # Goal state has been reached and a path needs to be created
+    #         currNode = node
+    #         while (currNode[1] != 'Start'):
+    #             path = [currNode[1], *path]                 # Add direction to get to node to path
+    #             currNode = predecessors[currNode]           # Set the current node to its parent node
+    #         return path                                     # Path has been fully constructed
+    #     # if node[0] not in visited:
+    #     #     visited.append(node[0])                         # Node has now been visited
+    #     for successor in problem.getSuccessors(node[0]):
+    #         currCost = problem.getCostOfActions() + successor[2] + heuristic(successor[0], problem)
+    #         if successor[0] not in visited:
+    #             frontier.push(successor, currCost)    # Add all successors to the queue
+    #             predecessors[successor] = node  # Define the predecessor to all successors as the popped node
+    # return []                                               # No goal state was found
+    visited = []
+    frontier = util.PriorityQueue()
+    startNode = (problem.getStartState(), [], 0)
+    frontier.push(startNode, 0)
     while (not frontier.isEmpty()):
         node = frontier.pop()
         if problem.isGoalState(node[0]):
-            path = []                                       # Goal state has been reached and a path needs to be created
-            currNode = node
-            while (currNode[1] != 'Start'):
-                path = [currNode[1], *path]                 # Add direction to get to node to path
-                currNode = predecessors[currNode]           # Set the current node to its parent node
-            return path                                     # Path has been fully constructed
+            return node[1]
         if node[0] not in visited:
-            visited.append(node[0])                         # Node has now been visited
+            visited.append(node[0])
             for successor in problem.getSuccessors(node[0]):
-                currCost = cost[node] + successor[2]
-                costAll = currCost + heuristic(successor[0], problem)
+                currCost = problem.getCostOfActions(node[1])\
+                           + (successor[2] + heuristic(successor[0], problem))
                 if successor[0] not in visited:
-                    frontier.update(successor, costAll)    # Add all successors to the queue
-                if (successor not in cost)\
-                        or (costAll < cost[successor]):
-                    predecessors[successor] = node          # Define the predecessor to all successors as the popped node
-                    cost[successor] = costAll
-    return []                                               #No goal state found
+                    frontier.push((successor[0], [*node[1], successor[1]]), currCost)
 
 # Abbreviations
 bfs = breadthFirstSearch
