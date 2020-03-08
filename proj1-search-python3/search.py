@@ -184,10 +184,10 @@ def aStarSearch(problem, heuristic=nullHeuristic):
         if node[0] not in visited:
             visited.append(node[0])                         # Node has now been visited
             for successor in problem.getSuccessors(node[0]):
-                currCost = cost[node] + successor[2]
+                currCost = node[2] + successor[2]
                 costAll = currCost + heuristic(successor[0], problem)
                 if successor[0] not in visited:
-                    frontier.update(successor, costAll)    # Add all successors to the queue
+                    frontier.push(successor, costAll)    # Add all successors to the queue
                 if (successor not in cost)\
                         or (costAll < cost[successor]):
                     predecessors[successor] = node          # Define the predecessor to all successors as the popped node
