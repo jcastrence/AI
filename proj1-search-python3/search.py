@@ -194,20 +194,21 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     #             frontier.push(successor, currCost)    # Add all successors to the queue
     #             predecessors[successor] = node  # Define the predecessor to all successors as the popped node
     # return []                                               # No goal state was found
-    visited = []
-    frontier = util.PriorityQueue()
+
+    visited = []                                              #Cycle detection
+    frontier = util.PriorityQueue()                           #Track explored nodes
     startNode = (problem.getStartState(), [], 0)
-    frontier.push(startNode, 0)
+    frontier.push(startNode, 0)                               #Add start node with cost 0
     while (not frontier.isEmpty()):
-        node = frontier.pop()
+        node = frontier.pop()                                 #Select node with lowest cost with heuristic
         if problem.isGoalState(node[0]):
-            return node[1]
+            return node[1]                                    #Stops if found goal state
         if node[0] not in visited:
-            visited.append(node[0])
-            for successor in problem.getSuccessors(node[0]):
+            visited.append(node[0])                           #Adds to visited states
+            for successor in problem.getSuccessors(node[0]):  #Cald cost with the heuristic
                 currCost = problem.getCostOfActions(node[1])\
                            + (successor[2] + heuristic(successor[0], problem))
-                if successor[0] not in visited:
+                if successor[0] not in visited:               #If successor not expanded, pushes to frontier
                     frontier.push((successor[0], [*node[1], successor[1]]), currCost)
 
 

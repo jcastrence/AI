@@ -391,23 +391,7 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
-    curr = state[0]                                             #Sets current location
-    corners = state[1]                                          #Sets corners for state
-    allCorners = []
-    distances = []
-
-    if (not corners):
-        return 0                                                #Default trivial return
-    for c in corners:
-        allCorners.append(corners[c])
-    for c in allCorners:
-        key = corner+location
-        if key in problem.heuristicInfo.keys():
-            distance = problem.heuristicInfo[key]
-        else:
-            distance = mazeDistance(curr, c, problem.gameState)
-            problem.heuristicInfo[key] = distance
-        distances.append(distance)
+    return 0
 
 
 class AStarCornersAgent(SearchAgent):
