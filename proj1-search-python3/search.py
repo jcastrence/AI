@@ -115,18 +115,22 @@ def breadthFirstSearch(problem):
     while (not frontier.isEmpty()):
         node = frontier.pop()                               # Visit the top node on the queue
         if problem.isGoalState(node[0]):                    # Check if goal state has been reached
+            print("Goal State reached")
             path = []                                       # Goal state has been reached and a path needs to be created
             currNode = node
             while (currNode[1] != 'Start'):
+                print(path)
                 path = [currNode[1], *path]                 # Add direction to get to node to path
                 currNode = predecessors[currNode]           # Set the current node to its parent node
             return path                                     # Path has been fully constructed
         if node[0] not in visited:
             visited.append(node[0])                         # Node has now been visited
             for successor in problem.getSuccessors(node[0]):
-                frontier.push(successor)                    # Add all successors to the queue
-                predecessors[successor] = node              # Define the predecessor to all successors as the popped node
-    return []                                               # No goal state was found
+                print(successor)
+                if successor not in predecessors:
+                    frontier.push(successor)                # Add all successors to the queue
+                    predecessors[successor] = node          # Define the predecessor to all successors as the popped node
+    return []                                              # No goal state was found
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
@@ -193,11 +197,6 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                     predecessors[successor] = node          # Define the predecessor to all successors as the popped node
                     cost[successor] = costAll
     return []                                               #No goal state found
-
-
-
-
-
 
 # Abbreviations
 bfs = breadthFirstSearch
