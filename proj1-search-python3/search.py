@@ -174,16 +174,16 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     startNode = (problem.getStartState(), [],0)
     frontier.push(startNode, 0)                            #Adds start state with cost 0
     visited = []                                           #Keep track of visited nodes
-    predecessors = {}
-    cost = {startNode : 0}
+    #predecessors = {}
+    #cost = {startNode : 0}
     while (not frontier.isEmpty()):
         node = frontier.pop()
         if problem.isGoalState(node[0]):
             path = []                                       # Goal state has been reached and a path needs to be created
             currNode = node
-            while (currNode[1] != 'Start'):
+            while (currNode[1] != []):
                 path = [currNode[1], *path]                 # Add direction to get to node to path
-                currNode = predecessors[currNode]           # Set the current node to its parent node
+                #currNode = predecessors[currNode]           # Set the current node to its parent node
             return path                                     # Path has been fully constructed
         if node[0] not in visited:
             visited.append(node[0])                         # Node has now been visited
@@ -191,11 +191,11 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                 currCost = node[2] + successor[2]
                 costAll = currCost + heuristic(successor[0], problem)
                 if successor[0] not in visited:
-                    frontier.push(successor, costAll)    # Add all successors to the queue
-                if (successor not in cost)\
-                        or (costAll < cost[successor]):
-                    predecessors[successor] = node          # Define the predecessor to all successors as the popped node
-                    cost[successor] = costAll
+                    frontier.push((successor[0], node[1]+[successor[1]],currCost), costAll)    # Add all successors to the queue
+                # if (successor not in cost)\
+                #         or (costAll < cost[successor]):
+                #     predecessors[successor] = node          # Define the predecessor to all successors as the popped node
+                #     cost[successor] = costAll
     return []                                               #No goal state found
 
 # Abbreviations
