@@ -1,3 +1,31 @@
+Skip to content
+Search or jump to…
+
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+@ckscott98 
+Learn Git and GitHub without any code!
+Using the Hello World guide, you’ll start a branch, write comments, and open a pull request.
+
+
+jcastrence
+/
+AI
+1
+10
+ Code Issues 0 Pull requests 0 Actions Projects 0 Wiki Security 0 Insights
+AI/proj1-search-python3/search.py /
+@jcastrence jcastrence 7
+069e1b8 on Mar 7
+@ckscott98@jcastrence
+190 lines (168 sloc)  10.1 KB
+  
+Code navigation is available!
+Navigate your code with ease. Click on function and method calls to jump to their definitions or references in the same repository. Learn more
+
 # search.py
 # ---------
 # Licensing Information:  You are free to use or extend these projects for
@@ -23,7 +51,6 @@ class SearchProblem:
     """
     This class outlines the structure of a search problem, but doesn't implement
     any of the methods (in object-oriented terminology: an abstract class).
-
     You do not need to change anything in this class, ever.
     """
 
@@ -36,7 +63,6 @@ class SearchProblem:
     def isGoalState(self, state):
         """
           state: Search state
-
         Returns True if and only if the state is a valid goal state.
         """
         util.raiseNotDefined()
@@ -44,7 +70,6 @@ class SearchProblem:
     def getSuccessors(self, state):
         """
           state: Search state
-
         For a given state, this should return a list of triples, (successor,
         action, stepCost), where 'successor' is a successor to the current
         state, 'action' is the action required to get there, and 'stepCost' is
@@ -55,7 +80,6 @@ class SearchProblem:
     def getCostOfActions(self, actions):
         """
          actions: A list of actions to take
-
         This method returns the total cost of a particular sequence of actions.
         The sequence must be composed of legal moves.
         """
@@ -167,50 +191,21 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-
-    # visited = []  # Create a list to store visited nodes (cycle detection)
-    # frontier = util.PriorityQueue()  # Create a Priority Queue to maintain node visiting order
-    # startNode = (problem.getStartState(), 'Start', 0)
-    # frontier.push(startNode, 0)  # Push the starting state onto the priority queue
-    # predecessors = {}                                       # Create dictionary to keep track of parent nodes
-    #
-    # while (not frontier.isEmpty()):
-    #     node = frontier.pop()  # Visit the top node on the priority queue (cheapest cost node)
-    #     if node[0] in visited:
-    #         continue
-    #     visited.append(node[0])
-    #     if problem.isGoalState(node[0]):                    # Check if goal state has been reached
-    #         path = []                                       # Goal state has been reached and a path needs to be created
-    #         currNode = node
-    #         while (currNode[1] != 'Start'):
-    #             path = [currNode[1], *path]                 # Add direction to get to node to path
-    #             currNode = predecessors[currNode]           # Set the current node to its parent node
-    #         return path                                     # Path has been fully constructed
-    #     # if node[0] not in visited:
-    #     #     visited.append(node[0])                         # Node has now been visited
-    #     for successor in problem.getSuccessors(node[0]):
-    #         currCost = problem.getCostOfActions() + successor[2] + heuristic(successor[0], problem)
-    #         if successor[0] not in visited:
-    #             frontier.push(successor, currCost)    # Add all successors to the queue
-    #             predecessors[successor] = node  # Define the predecessor to all successors as the popped node
-    # return []                                               # No goal state was found
-
-    visited = []                                              #Cycle detection
-    frontier = util.PriorityQueue()                           #Track explored nodes
+    visited = []                                            # Create a list to store visited nodes (cycle detection)
+    frontier = util.PriorityQueue()                         # Create a Priority Queue to maintain node visiting order
     startNode = (problem.getStartState(), [], 0)
-    frontier.push(startNode, 0)                               #Add start node with cost 0
+    frontier.push(startNode, 0)                             # Push the starting state onto the priority queue
     while (not frontier.isEmpty()):
-        node = frontier.pop()                                 #Select node with lowest cost with heuristic
-        if problem.isGoalState(node[0]):
-            return node[1]                                    #Stops if found goal state
+        node = frontier.pop()                               # Visit the top node on the priority queue (cheapest cost node)
+        if problem.isGoalState(node[0]):                    # Check if goal state has been reached
+            return node[1]                                  # Goal state has been reached and a path needs to be created
         if node[0] not in visited:
-            visited.append(node[0])                           #Adds to visited states
-            for successor in problem.getSuccessors(node[0]):  #Cald cost with the heuristic
+            visited.append(node[0])                         # Node has now been visited
+            for successor in problem.getSuccessors(node[0]):
                 currCost = problem.getCostOfActions(node[1])\
-                           + (successor[2] + heuristic(successor[0], problem))
-                if successor[0] not in visited:               #If successor not expanded, pushes to frontier
-                    frontier.push((successor[0], [*node[1], successor[1]]), currCost)
-
+                           + (successor[2] + heuristic(successor[0], problem))          # The cost is the sum of regular cost and heuristic cost
+                if successor[0] not in visited:
+                    frontier.push((successor[0], [*node[1], successor[1]]), currCost)   # Add successor to priority queue only if it hasn't been visited
 
 # Abbreviations
 bfs = breadthFirstSearch
