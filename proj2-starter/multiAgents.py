@@ -165,14 +165,44 @@ class MinimaxAgent(MultiAgentSearchAgent):
         Returns whether or not the game state is a losing state
         """
         "*** YOUR CODE HERE ***"
+        # Recursively finds the minimax
+        def minimax(agent, depth, gameState):
+            gameOver = gameState.isLose() or gameState.isWin()
+            # Base case
+            if depth == self.depth or gameOver:
+                return self.evaluationFunction(gameState)
+            # Agent is Pacman
+            if agent == 0:
+                maxEval = float("-inf")
+                for child in gameState.getLegalActions(agent):
+                    successor = gameState.generateSuccessor(agent, child)
+                    eval = minimax(1, depth, successor)
+                    if eval > maxEval:
+                        maxEval = eval
+                return maxEval
+            # Agent is a ghost
+            else:
+                nextAgent = agent + 1
+                if gameState.getNumAgents() == nextAgent:
+                    nextAgent = 0
+                    depth += 1
+                minEval = float("inf")
+                for child in gameState.getLegalActions(agent):
+                    successor = gameState.generateSuccessor(agent, child)
+                    eval = minimax(nextAgent, depth, successor)
+                    if eval < minEval:
+                        minEval = eval
+                return minEval
+        # Get the best action from the root
+        max = float("-inf")
+        maxAction = gameState.getLegalActions(0)[0]
+        for state in gameState.getLegalActions(0):
+            minimaxScore = minimax(1, 0, gameState.generateSuccessor(0, state))
+            if minimaxScore > max:
+                max = minimaxScore
+                maxAction = state
 
-        def minValue():                                                                #Find Min function
-            return 0
-
-        def maxValue():                                                                #Find max function
-            return 0
-
-        util.raiseNotDefined()
+        return maxAction
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
     """
